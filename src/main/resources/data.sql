@@ -1,0 +1,1 @@
+INSERT INTO customer (id, firstname, lastname, fiscal_code, birth_date, email, phone_number, newsletter) VALUES (10, 'marco', 'faccani', 'fiscalCodeValue', '1995-07-10', 'marco@example.com', '312345678', 1)

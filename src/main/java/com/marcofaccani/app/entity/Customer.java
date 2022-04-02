@@ -32,11 +32,9 @@ public class Customer {
 
   private String firstname;
   private String lastname;
-  private String fiscalCode;
   private LocalDate birthDate;
-  private String email;
-  private String phoneNumber;
-  private Boolean newsletter;
+  private String sensitiveDataOne;
+  private String sensitiveDataTwo;
 
   @Override
   public boolean equals(Object o) {

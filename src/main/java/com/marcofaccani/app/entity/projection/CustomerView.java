@@ -1,5 +1,7 @@
 package com.marcofaccani.app.entity.projection;
 
+import java.time.LocalDate;
+
 import com.marcofaccani.app.entity.Customer;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -12,5 +14,6 @@ public interface CustomerView {
 
   String getFirstname();
   String getLastname();
+  LocalDate getBirthDate();
 
 }

@@ -1,3 +1,3 @@
-INSERT INTO customer (id, firstname, lastname, fiscal_code, birth_date, email, phone_number, newsletter) VALUES (1, 'marco', 'faccani', 'fiscalCodeValue', '1995-07-10', 'marco@example.com', '312345678', 1);
-INSERT INTO customer (id, firstname, lastname, fiscal_code, birth_date, email, phone_number, newsletter) VALUES (2, 'mario', 'rossi', 'taxId', '2022-12-22', 'mario@example.com', '423567654', 0);
-INSERT INTO customer (id, firstname, lastname, fiscal_code, birth_date, email, phone_number, newsletter) VALUES (3, 'luigi', 'stark', 'fakeFiscalCode', '1990-01-10', 'luigi@example.com', '48392021', 0);
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (1, 'marco', 'faccani', '1995-07-10', 'sensitiveDataOne', 'sensitiveDataTwo');
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (2, 'mario', 'rossi', '2022-12-22', 'sensitiveDataOne', 'sensitiveDataTwo');
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (3, 'luigi', 'stark', '1990-01-10', 'sensitiveDataOne', 'sensitiveDataTwo');

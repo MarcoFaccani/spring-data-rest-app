@@ -3,7 +3,12 @@ In this app I'm testing Spring Data Rest features to validate them in a producti
 Default page size is 20.  
 
 ## Entities
-- Customer
+- Customer: it holds info about the customer including two sensitive data that the client shall not access (`sensitiveDataOne`, `sensitiveDataTwo`)
+
+## Decoupling Entities
+Hold on! I don't want to expose to the client all the data in the DB!  
+Easy, use projections: we can define views and expose only those.  
+For automating the conversion from entity to view for resource collections annotate the repository with `@RepositoryRestResource(excerptProjection = MyView.class)`
 
 ## Automatically exposed endpoints:
 
@@ -34,8 +39,6 @@ _Note: page number is zero-index based_
 - search customers having _firstname_ starting with and get specific page: `curl 'http://localhost:8081/customers/search/firstnameStartsWith?firstname={firstname_param}&page={page_num}'`
 - search customers having _firstname_ starting with and get specific page with given page size: `curl 'http://localhost:8081/customers/search/firstnameStartsWith?firstname={firstname_param}&page={page_num}&size={page_size}'`
 - search customers having _firstname_ starting with and sort by given field and direction: `curl 'http://localhost:8081/customers/search/firstnameStartsWith?firstname={firstname_param}&sort={field},{asc/desc}'`
-
-
 
 
 ## Documentation: Application-Level Profile Semantics (ALPS)

@@ -45,3 +45,9 @@ _Note: page number is zero-index based_
 An automatically-generated endpoint describing the entities, the endpoints and the operations allowed.  
 You can access it as follows: `curl http://localhost:8081/profile`  
 For [more information](https://docs.spring.io/spring-data/rest/docs/current/reference/html/#metadata.alps)
+
+
+## TODO:
+- How to make sure an entity is never exposed to the client but rather always its projection by default?
+- How to implement a search feature using Querydsl?
+- Is there a way to not expose any endpoints by default?

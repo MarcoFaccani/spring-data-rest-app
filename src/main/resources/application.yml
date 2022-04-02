@@ -20,8 +20,10 @@ spring:
     init:
       mode: always
 
-logging.level.hibernate.SQL: debug
-logging.level.hibernate.type.descriptor.sql: trace
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
 
 
 

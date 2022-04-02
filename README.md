@@ -1,9 +1,9 @@
 # spring-data-rest-app
 In this app I'm testing Spring Data Rest features to validate them in a production project.  
 Default page size is 20.  
-_Note: page number is zero-index based_
 
 ## Entities
+- Customer
 
 ## Automatically exposed endpoints:
 
@@ -20,6 +20,13 @@ _Note: page number is zero-index based_
 - get all customer specifying page size: `curl 'http://localhost:8081/customers?size={page_number}'`
 - get all customer specifying page number: `curl 'http://localhost:8081/customers?page={page_number}'`
 
+## Customizaion
+
+### Disable a specific out-of-the-box CRUD operation:
+Simply in your repository override the method of your choice (explore the JPARepository and the extended interfaces) and annotate it with `@RestResource(exported = false)`
+Lunch the app and delete a customer by using its ID (find the curl methods down below).
+Then uncomment the deleteById override method in the repository, reboot and try again the same operation, you won't be able to delete the customer
+
 ## Custom endpoints
 ### Search API
 _Note: page number is zero-index based_
@@ -31,7 +38,7 @@ _Note: page number is zero-index based_
 
 
 
-## Application-Level Profile Semantics (ALPS)
+## Documentation: Application-Level Profile Semantics (ALPS)
 An automatically-generated endpoint describing the entities, the endpoints and the operations allowed.  
 You can access it as follows: `curl http://localhost:8081/profile`  
 For [more information](https://docs.spring.io/spring-data/rest/docs/current/reference/html/#metadata.alps)

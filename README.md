@@ -1,6 +1,6 @@
-# spring-data-rest-app
+# Exploring Spring Data REST features
 In this app I'm testing Spring Data Rest features to validate them in a production project.  
-Default page size is 20.  
+For more info see [official documentation](https://docs.spring.io/spring-data/rest/docs/current/reference/html/#reference)
 
 ## Entities
 - Customer: it holds info about the customer including two sensitive data that the client shall not access (`sensitiveDataOne`, `sensitiveDataTwo`)
@@ -14,7 +14,7 @@ For automating the conversion from entity to view for resource collections annot
 
 ### CRUD
 - automatic documentation (to be explored further): `curl http://localhost:8081/profile`
-- get all customers: `curl http://localhost:8081/customers`
+- get all customers (or, if enabled, CustomerView): `curl http://localhost:8081/customers`
 - get specific customer: `curl http://localhost:8081/customers/{id}`
 - get view (projection) of specific customer: `curl 'http://localhost:8081/customers/{id}?projection=customer-view'`
 - update customer: `curl -d '{ "firstname": "John"}' -H "Content-Type: application/json" -X PUT http://localhost:8081/customers/{id}`

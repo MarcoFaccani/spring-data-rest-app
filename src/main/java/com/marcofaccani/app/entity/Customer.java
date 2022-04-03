@@ -29,13 +29,14 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NotBlank
   private String firstname;
-  private String lastname;
-  private LocalDate birthDate;
 
   @NotBlank
-  private String sensitiveDataOne;
+  private String lastname;
 
+  private LocalDate birthDate;
+  private String sensitiveDataOne;
   private String sensitiveDataTwo;
 
   @Override

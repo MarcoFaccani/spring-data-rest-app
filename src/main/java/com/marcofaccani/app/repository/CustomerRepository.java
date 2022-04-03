@@ -1,5 +1,7 @@
 package com.marcofaccani.app.repository;
 
+import java.util.Optional;
+
 import com.marcofaccani.app.entity.Customer;
 import com.marcofaccani.app.entity.projection.CustomerView;
 import org.springframework.data.domain.Page;
@@ -14,19 +16,15 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(excerptProjection = CustomerView.class) // defaults CustomerView to be used for resource collections
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-
   @RestResource(path = "firstnameStartsWith", rel = "firstnameStartsWith")
   public Page<Customer> findByFirstnameStartsWith(@Param("firstname") String firstname, Pageable page);
 
   /*
     * Wish to disable an automatically-exposed feature such as deleteById?
     * Simple, just override the method and annotate it with @RestResource(exported = false)
-
     @Override
     @RestResource(exported = false)
     void deleteById(Long id);
-
    */
-
 
 }

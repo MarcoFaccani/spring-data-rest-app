@@ -47,22 +47,16 @@ public class ApplicationTest {
   private String baseUrl;
 
   @Autowired
-  TestRestTemplate testRestTemplate;
-
-  @Autowired
   CustomerRepository repository;
 
   @Autowired
   WebTestClient client;
-
-  Traverson traverson;
 
 
   @BeforeEach
   @SneakyThrows
   void setup() {
     baseUrl = "http://localhost:" + port + basePath;
-    traverson = new Traverson(new URI(baseUrl.concat("/customers")), MediaTypes.HAL_JSON);
   }
 
   @AfterEach
@@ -74,35 +68,29 @@ public class ApplicationTest {
   public void contextLoadTest() { }
 
   @Test
-  void shouldGetAllCustomersUsingView() {
-    var response = testRestTemplate.getForEntity(baseUrl.concat("/customers"), Customer[].class);
-    assertNotNull(response);
-    var customers = response.getBody();
-    assertThat(customers).hasSize(3);
-    assertThat(customers[0]).isInstanceOf(CustomerView.class);
-  }
-
-  @Test
-  void prova3() {
+  void test() {
     client.get().uri(baseUrl.concat("/customers")).accept(HAL_JSON)
         .exchange()
         .expectStatus().isOk()
         .expectBody(new TypeReferences.CollectionModelType<EntityModel<CustomerView>>() {})
         .consumeWith(result -> {
-          CollectionModel<EntityModel<CustomerView>> model = result.getResponseBody();
+          // How to get the Page<CustomerView> ?
+          CollectionModel<EntityModel<CustomerView>> model = result.getResponseBody(); // <- it doesn't seem to contain the proper response
           assertThat(model.getContent()).hasSize(3);
         });
   }
 
   @Test
-  void prova4() {
-    client.get().uri(baseUrl.concat("/customers"))
+  void test2() {
+    client.get().uri(baseUrl.concat("/customers")).accept(HAL_JSON)
         .exchange()
         .expectBody(new TypeReferences.EntityModelType<CustomerView>() {})
         .consumeWith(result -> {
+          // How to get the Page<CustomerView> ?
           Object o = ((LinkedHashMap) ((LinkedHashMap) result.getResponseBody().getContent()).get("_embedded")).get(
-              "customers");
+              "customers"); // <-- it contains what I am looking for in the debugger but is a crazy approach
         });
   }
+
 
 }

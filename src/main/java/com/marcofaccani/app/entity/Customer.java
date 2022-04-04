@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.hateoas.RepresentationModel;
+
 
 @Getter
 @Setter
@@ -23,7 +25,7 @@ import org.hibernate.Hibernate;
 @NoArgsConstructor
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class Customer extends RepresentationModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,5 @@
 package com.marcofaccani.app.repository;
 
-import java.util.Optional;
-
 import com.marcofaccani.app.entity.Customer;
 import com.marcofaccani.app.entity.projection.CustomerView;
 import org.springframework.data.domain.Page;

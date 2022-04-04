@@ -14,20 +14,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.client.Traverson.TraversalBuilder;
+import org.springframework.hateoas.config.HypermediaWebTestClientConfigurer;
 import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
 public class ApplicationTest {
 
   @LocalServerPort
@@ -39,10 +44,13 @@ public class ApplicationTest {
   private String baseUrl;
 
   @Autowired
-  TestRestTemplate client;
+  TestRestTemplate testRestTemplate;
 
   @Autowired
   CustomerRepository repository;
+
+  @Autowired
+  WebTestClient client;
 
   Traverson traverson;
 
@@ -64,7 +72,7 @@ public class ApplicationTest {
 
   @Test
   void shouldGetAllCustomersUsingView() {
-    var response = client.getForEntity(baseUrl.concat("/customers"), Customer[].class);
+    var response = testRestTemplate.getForEntity(baseUrl.concat("/customers"), Customer[].class);
     assertNotNull(response);
     var customers = response.getBody();
     assertThat(customers).hasSize(3);
@@ -72,27 +80,14 @@ public class ApplicationTest {
   }
 
   @Test
-  void prova2() {
-    var builder = traverson.follow("$._embedded.customers");
-
-    var resourceParameterizedTypeReference = new TypeReferences.ResourcesType<Resources<Customer>>(){};
-
-    Resources<Resources<Customer>> taskResources = builder.toObject(resourceParameterizedTypeReference);
+  void prova3() {
+    client.get().uri(baseUrl.concat("/customers"))
+        .exchange()
+        .expectBody(new TypeReferences.EntityModelType<CustomerView>() {})
+        .consumeWith(result -> {
+          assertThat(result.getResponseBody().getContent().getFirstname()).isEqualTo("marco");
+          //((LinkedHashMap) result.body.content).get("_embedded")
+        });
   }
-
-/*
-  @Test
-  @SneakyThrows
-  void prova() {
-    Traverson traverson = new Traverson(new URI(baseUrl.concat("/customers")), MediaTypes.HAL_JSON);
-    TraversalBuilder tb = traverson.follow("customers");
-
-    ParameterizedTypeReference<List<CustomerView>> typeRefDevices = new ParameterizedTypeReference<>();
-
-    Resources<CustomerView> resUsers = tb.toObject(typeRefDevices);
-    Collection<UserJson> users= resUsers .getContent();
-  }
-
- */
 
 }

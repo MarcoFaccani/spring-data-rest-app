@@ -1,6 +1,7 @@
 package com.marcofaccani.app.functional;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.marcofaccani.app.entity.Customer;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.client.Traverson.TraversalBuilder;
@@ -30,6 +32,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.data.rest.webmvc.RestMediaTypes.HAL_JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -81,12 +84,24 @@ public class ApplicationTest {
 
   @Test
   void prova3() {
+    client.get().uri(baseUrl.concat("/customers")).accept(HAL_JSON)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(new TypeReferences.CollectionModelType<EntityModel<CustomerView>>() {})
+        .consumeWith(result -> {
+          CollectionModel<EntityModel<CustomerView>> model = result.getResponseBody();
+          assertThat(model.getContent()).hasSize(3);
+        });
+  }
+
+  @Test
+  void prova4() {
     client.get().uri(baseUrl.concat("/customers"))
         .exchange()
         .expectBody(new TypeReferences.EntityModelType<CustomerView>() {})
         .consumeWith(result -> {
-          assertThat(result.getResponseBody().getContent().getFirstname()).isEqualTo("marco");
-          //((LinkedHashMap) result.body.content).get("_embedded")
+          Object o = ((LinkedHashMap) ((LinkedHashMap) result.getResponseBody().getContent()).get("_embedded")).get(
+              "customers");
         });
   }
 

@@ -23,6 +23,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.client.Traverson.TraversalBuilder;
 import org.springframework.hateoas.config.HypermediaWebTestClientConfigurer;
@@ -90,6 +91,28 @@ public class ApplicationTest {
           Object o = ((LinkedHashMap) ((LinkedHashMap) result.getResponseBody().getContent()).get("_embedded")).get(
               "customers"); // <-- it contains what I am looking for in the debugger but is a crazy approach
         });
+  }
+
+  @Test
+  void test3() {
+    var resourceParameterizedTypeReference = new TypeReferences.CollectionModelType<EntityModel<CustomerView>>() {};
+    Traverson traverson = new Traverson(URI.create(baseUrl.concat("/customers")), MediaTypes.HAL_JSON);
+    var customers = traverson.follow("$._embedded.customers").toObject(resourceParameterizedTypeReference);
+  }
+
+  @Test
+  void test4() {
+    ParameterizedTypeReference<EntityModel<CustomerView>> resourceParameterizedTypeReference = new ParameterizedTypeReference<EntityModel<CustomerView>>() {};
+    new Traverson(URI.create(baseUrl.concat("/customers")), MediaTypes.HAL_JSON).follow("");
+  }
+
+  @Test
+  void test5() {
+    var resourceParameterizedTypeReference = new ParameterizedTypeReference<PagedModel<CustomerView>>() {};
+    Traverson traverson = new Traverson(URI.create(baseUrl.concat("/customers")), MediaTypes.HAL_JSON);
+    var customers = traverson
+          .follow("$._embedded.customers")
+        .toObject(resourceParameterizedTypeReference);
   }
 
 

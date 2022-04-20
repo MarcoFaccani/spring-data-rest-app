@@ -1,5 +1,7 @@
 package com.marcofaccani.app.functional;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 
 import com.marcofaccani.app.entity.Customer;
@@ -20,10 +22,14 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.client.Traverson;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.HAL_JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -92,6 +98,17 @@ public class ApplicationTest {
           assertEquals("sensitiveDataOne", customer.getSensitiveDataOne());
           assertEquals("sensitiveDataTwo", customer.getSensitiveDataTwo());
         });
+  }
+
+  @Test
+  @SneakyThrows
+  void shouldRetrieveCustomersEntities() {
+    Traverson client = new Traverson(new URI(baseUrl + "/customers"), MediaTypes.HAL_JSON);
+    var customers = client
+        .follow("customers")
+        .toObject(parameterizedTypeReference)
+        .getContent();
+    assertThat(customers).hasSize(3);
   }
 
 }

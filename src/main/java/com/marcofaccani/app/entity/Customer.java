@@ -9,6 +9,10 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +41,10 @@ public class Customer extends RepresentationModel {
   @NotBlank
   private String lastname;
 
+  @JsonSerialize(using = LocalDateSerializer.class)
+  @JsonDeserialize(using = LocalDateDeserializer.class)
   private LocalDate birthDate;
+
   private String sensitiveDataOne;
   private String sensitiveDataTwo;
 

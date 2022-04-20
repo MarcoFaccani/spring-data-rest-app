@@ -10,6 +10,7 @@ import com.marcofaccani.app.repository.CustomerRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.client.Hop;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -50,7 +52,7 @@ public class ApplicationTest {
   @Autowired
   WebTestClient client;
 
-  ParameterizedTypeReference<PagedModel<Customer>> parameterizedTypeReference = new ParameterizedTypeReference<>(){};
+  ParameterizedTypeReference<PagedModel<Customer>> pagedCustomer = new ParameterizedTypeReference<>(){};
 
 
   @BeforeEach
@@ -67,18 +69,37 @@ public class ApplicationTest {
   @Test
   public void contextLoadTest() { }
 
-  @Test
-  void shouldRetrieveCustomersViews() {
-    client.get().uri(baseUrl.concat("/customers")).accept(HAL_JSON)
-        .exchange()
-        .expectStatus().isOk()
-        .expectHeader().contentType(HAL_JSON)
-        .expectBody(new ParameterizedTypeReference<PagedModel<Customer>>() {}) // the issue may be that customers aren't at first level but nested in _embedded
-        //.expectBodyList(Customer.class)
-        //.hasSize(3)
-        .consumeWith(response -> {
-          var responseBody = response.getResponseBody();
-        });
+  @Nested
+  class LinksTests {
+
+    @Test
+    @SneakyThrows
+    void shouldRetrieveCustomersEntitiesFollowingLinkFromBaseUrl() {
+      Traverson client = new Traverson(new URI(baseUrl), MediaTypes.HAL_JSON);
+      var customers = client
+          .follow("customers")
+          .toObject(pagedCustomer)
+          .getContent();
+      assertThat(customers).hasSize(3);
+    }
+
+    @Test
+    @SneakyThrows
+    void shouldRetrieveFirstCustomerByFollowingLinkFromGetAllCustomers() {
+      Traverson traverson = new Traverson(new URI(baseUrl + "/customers"), MediaTypes.HAL_JSON);
+      var customer = traverson
+          .follow("$._embedded.customers[0]._links.self.href")
+          .toObject(new ParameterizedTypeReference<EntityModel<Customer>>() {} )
+          .getContent();
+      assertNotNull(customer);
+      assertNull(customer.getId());
+      assertEquals("marco", customer.getFirstname());
+      assertEquals("faccani", customer.getLastname());
+      assertEquals(LocalDate.of(1995, 7, 10), customer.getBirthDate());
+      assertEquals("sensitiveDataOne", customer.getSensitiveDataOne());
+      assertEquals("sensitiveDataTwo", customer.getSensitiveDataTwo());
+    }
+
   }
 
   @Test
@@ -102,13 +123,30 @@ public class ApplicationTest {
 
   @Test
   @SneakyThrows
-  void shouldRetrieveCustomersEntities() {
+  void shouldRetrieveFirstCustomerEntity() {
     Traverson client = new Traverson(new URI(baseUrl), MediaTypes.HAL_JSON);
-    var customers = client
-        .follow("customers")
-        .toObject(parameterizedTypeReference)
+    var customer = client
+        .follow("customers", "$._embedded.customers[0]._links.self.href")
+        .toObject(new ParameterizedTypeReference<EntityModel<Customer>>() {} )
         .getContent();
-    assertThat(customers).hasSize(3);
+    assertNotNull(customer);
+    assertNull(customer.getId());
+    assertEquals("marco", customer.getFirstname());
+    assertEquals("faccani", customer.getLastname());
+    assertEquals(LocalDate.of(1995, 7, 10), customer.getBirthDate());
+    assertEquals("sensitiveDataOne", customer.getSensitiveDataOne());
+    assertEquals("sensitiveDataTwo", customer.getSensitiveDataTwo());
+  }
+
+  @Test
+  @SneakyThrows
+  void prova() {
+    Traverson client = new Traverson(new URI(baseUrl + "/customers"), MediaTypes.HAL_JSON);
+    var customer = client
+        .follow("$._embedded.customers[0]._links.self.href")
+        .toObject(new ParameterizedTypeReference<EntityModel<Customer>>() {} )
+        .getContent();
+    assertNotNull(customer);
   }
 
 }

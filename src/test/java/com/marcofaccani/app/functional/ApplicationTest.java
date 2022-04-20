@@ -103,7 +103,7 @@ public class ApplicationTest {
   @Test
   @SneakyThrows
   void shouldRetrieveCustomersEntities() {
-    Traverson client = new Traverson(new URI(baseUrl + "/customers"), MediaTypes.HAL_JSON);
+    Traverson client = new Traverson(new URI(baseUrl), MediaTypes.HAL_JSON);
     var customers = client
         .follow("customers")
         .toObject(parameterizedTypeReference)

@@ -1,7 +1,6 @@
 package com.marcofaccani.app.functional;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 
 import com.marcofaccani.app.entity.Customer;
@@ -18,20 +17,18 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.support.SpringFactoriesLoader;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.client.Hop;
 import org.springframework.hateoas.client.Traverson;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.HAL_JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,11 +56,6 @@ public class ApplicationTest {
   @SneakyThrows
   void setup() {
     baseUrl = "http://localhost:" + port + basePath;
-  }
-
-  @AfterEach
-  void tearDown() {
-    repository.deleteAll();
   }
 
   @Test
@@ -138,15 +130,5 @@ public class ApplicationTest {
     assertEquals("sensitiveDataTwo", customer.getSensitiveDataTwo());
   }
 
-  @Test
-  @SneakyThrows
-  void prova() {
-    Traverson client = new Traverson(new URI(baseUrl + "/customers"), MediaTypes.HAL_JSON);
-    var customer = client
-        .follow("$._embedded.customers[0]._links.self.href")
-        .toObject(new ParameterizedTypeReference<EntityModel<Customer>>() {} )
-        .getContent();
-    assertNotNull(customer);
-  }
 
 }

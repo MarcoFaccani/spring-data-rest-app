@@ -19,6 +19,7 @@ For automating the conversion from entity to view for resource collections annot
 - get view (projection) of specific customer: `curl 'http://localhost:8081/api/customers/{id}?projection=customer-view'`
 - update customer: `curl -d '{ "firstname": "John"}' -H "Content-Type: application/json" -X PUT http://localhost:8081/api/customers/{id}`
 - create customer: `curl -d '{ "firstname": "Varys", "lastname": "unknown"}' -H "Content-Type: application/json" -X POST http://localhost:8081/api/customers`   
+- delete customer: `curl -X DELETE http://localhost:8081/customers/{id}`
 
 ### Paging
 _Note: page number is zero-index based_  

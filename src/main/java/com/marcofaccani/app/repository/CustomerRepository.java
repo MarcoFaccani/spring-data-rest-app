@@ -1,7 +1,5 @@
 package com.marcofaccani.app.repository;
 
-import java.util.Optional;
-
 import com.marcofaccani.app.entity.Customer;
 import com.marcofaccani.app.entity.projection.CustomerView;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RepositoryRestResource(excerptProjection = CustomerView.class) // defaults CustomerView to be used for resource collections
+//@RepositoryRestResource(excerptProjection = CustomerView.class) // defaults CustomerView to be used for resource collections
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
   @RestResource(path = "firstnameStartsWith", rel = "firstnameStartsWith")

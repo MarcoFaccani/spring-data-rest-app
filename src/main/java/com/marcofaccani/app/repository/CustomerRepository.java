@@ -1,9 +1,18 @@
 package com.marcofaccani.app.repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import com.marcofaccani.app.entity.Customer;
 import com.marcofaccani.app.entity.QCustomer;
 import com.marcofaccani.app.entity.projection.CustomerView;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,9 +33,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>,
   public Page<Customer> findByFirstnameStartsWith(@Param("firstname") String firstname, Pageable page);
 
   @Override
-  default void customize(QuerydslBindings bindings, QCustomer root) {
+  default void customize(QuerydslBindings bindings, QCustomer customer) {
+
+    // make search case-insensitive
     bindings.bind(String.class).first( (StringPath path, String value) -> path.containsIgnoreCase(value));
-    //bindings.excluding(root.firstname);
+
   }
 
 

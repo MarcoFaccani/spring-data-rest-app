@@ -45,7 +45,8 @@ _Note: page number is zero-index based_
 - find customer by firstname starting with: `curl http://localhost:8081/api/customers?firstname={firstname}`
 - find customer by lastname starting with: `curl http://localhost:8081/api/customers?lastname={lastname}`
 - find customer by lastname starting with and lastname starting with: `curl http://localhost:8081/api/customers?firstname={firstname}&lastname={lastname}`
-
+- find customer by birthDate: `curl http://localhost:8081/api/customers?birthDate={date}`
+    
 ## Documentation: Application-Level Profile Semantics (ALPS)
 An automatically-generated endpoint describing the entities, the endpoints and the operations allowed.  
 You can access it as follows: `curl http://localhost:8081/api/profile`  

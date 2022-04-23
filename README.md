@@ -6,9 +6,10 @@ For more info see [official documentation](https://docs.spring.io/spring-data/re
 - Customer: it holds info about the customer including two sensitive data that the client shall not access (`sensitiveDataOne`, `sensitiveDataTwo`)
 
 ## Decoupling Entities
-Hold on! I don't want to expose to the client all the data in the DB!  
-Easy, use projections: we can define views and expose only those.  
-For automating the conversion from entity to view for resource collections annotate the repository with `@RepositoryRestResource(excerptProjection = MyView.class)`
+Entities decoupling can be achieved by using projections.  
+For automating the conversion from entity to view for resource collections annotate the repository with `@RepositoryRestResource(excerptProjection = MyView.class)`  
+For single resource retrieval the client must use the provided endpoint to retrieve the projection and not the full entity (this is not true for retrieval of collection of resources).  
+You may be asking yourself "hold on, so the client can decide if to retrieve the projection or the full entity?!" Yep, that's correct but there is a good reason for it. See [here](https://stackoverflow.com/questions/30220333/why-is-an-excerpt-projection-not-applied-automatically-for-a-spring-data-rest-it/30297320#3029732) for more
 
 ## Automatically exposed endpoints:
 

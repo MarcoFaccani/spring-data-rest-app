@@ -21,6 +21,9 @@ For automating the conversion from entity to view for resource collections annot
 - create customer: `curl -d '{ "firstname": "Varys", "lastname": "unknown"}' -H "Content-Type: application/json" -X POST http://localhost:8081/api/customers`   
 - delete customer: `curl -X DELETE http://localhost:8081/customers/{id}`
 
+### Sorting
+- get all customer and sort by given field and direction: `curl http://localhost:8081/api/customers?sort={field},{direction(asc/desc}`
+
 ### Paging
 _Note: page number is zero-index based_  
 - get all customer specifying page size: `curl 'http://localhost:8081/api/customers?size={page_number}'`
@@ -43,8 +46,7 @@ _Note: page number is zero-index based_
 
 ### Querydls
 - find customer by firstname starting with: `curl http://localhost:8081/api/customers?firstname={firstname}`
-- find customer by lastname starting with: `curl http://localhost:8081/api/customers?lastname={lastname}`
-- find customer by lastname starting with and lastname starting with: `curl http://localhost:8081/api/customers?firstname={firstname}&lastname={lastname}`
+- find customer by firstname starting with and lastname starting with: `curl http://localhost:8081/api/customers?firstname={firstname}&lastname={lastname}`
 - find customer by birthDate: `curl http://localhost:8081/api/customers?birthDate={date}`
     
 ## Documentation: Application-Level Profile Semantics (ALPS)

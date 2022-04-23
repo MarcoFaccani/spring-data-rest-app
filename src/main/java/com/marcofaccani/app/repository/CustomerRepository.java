@@ -1,14 +1,19 @@
 package com.marcofaccani.app.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.marcofaccani.app.entity.Customer;
 import com.marcofaccani.app.entity.QCustomer;
+import com.marcofaccani.app.entity.extention.CustomerExtendedFilters;
 import com.marcofaccani.app.entity.projection.CustomerView;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
@@ -34,12 +39,21 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>,
 
   @Override
   default void customize(QuerydslBindings bindings, QCustomer customer) {
-
     // make search case-insensitive
     bindings.bind(String.class).first( (StringPath path, String value) -> path.containsIgnoreCase(value));
 
+    var firstname = new PathBuilder<>(Customer.class, "something").get("firstname");
+    bindings.bind(firstname).first( (StringPath path, String value) -> path.containsIgnoreCase(value));
+
+
+    adulthoodBinding(bindings, customer);
   }
 
+  default void adulthoodBinding(QuerydslBindings bindings, QCustomer customer) {
+    var minAgeForAdulthood = LocalDate.now().minusYears(18);
+    BooleanPath adulthood = new PathBuilder<>(CustomerExtendedFilters.class, "adulthood").getBoolean("adulthood");
+    bindings.bind(adulthood).first((path, value) -> new BooleanBuilder().and(value ? customer.birthDate.loe(minAgeForAdulthood) : customer.birthDate.gt(minAgeForAdulthood)));
+  }
 
   /*
     * Wish to disable an automatically-exposed feature such as deleteById?

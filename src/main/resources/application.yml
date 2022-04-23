@@ -22,11 +22,15 @@ spring:
   sql:
     init:
       mode: always
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
+
 
 
 

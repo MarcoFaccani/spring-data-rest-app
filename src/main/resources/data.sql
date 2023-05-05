@@ -1,0 +1,3 @@
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (1, 'marco', 'faccani', '1995-07-10', 'sensitiveDataOne', 'sensitiveDataTwo');
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (2, 'mario', 'rossi', '2022-12-22', 'sensitiveDataOne', 'sensitiveDataTwo');
+INSERT INTO customer (id, firstname, lastname, birth_date, sensitive_data_one, sensitive_data_two) VALUES (3, 'luigi', 'stark', '1990-01-10', 'sensitiveDataOne', 'sensitiveDataTwo');
